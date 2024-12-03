@@ -201,4 +201,83 @@ COMMON_NOUNS = [
     "группа",
     "участие",
 ]
+import random
 
+print(f'Добро пожаловтаь в игру \"Виселица\". \nВ игре присутствует 7 уровней сложности. 1lvl - слово из 3 букв. 7lvl - слово из 9 букв')
+Level = int(input("Введите сложность(длину слова) в игре: "))
+
+def main(Level, game_mode = True):
+    
+    # тело игры
+    while game_mode:
+        print(f'Ваш уровень сложности: {Level} \n__________________________________________________________')
+        answer_result = "_" # вывод интерфейса игры
+        live = 0 # счетчик
+        LEVEL_COMMON_NOUNS =[] # уровень сложности
+        letter = [] # список использованных букв
+
+        # создание массива слов конкретной длины
+        for i in range(len(COMMON_NOUNS)):
+            if len(COMMON_NOUNS[i]) == Level+2:
+                LEVEL_COMMON_NOUNS.append(COMMON_NOUNS[i])
+
+        answer = random.choice(LEVEL_COMMON_NOUNS)
+
+        while len(answer_result) != len(answer)*2-1:
+            answer_result += " _"
+        print(answer_result)
+        answer = list(answer)
+
+
+        while live < 8:
+            #проверка на готовность ответить
+            Game_sit = input("Готовы ли ответить? (yes/no) \n")
+            if Game_sit == 'yes':
+                guess = ''
+                while len(guess) != len(answer):
+                    guess = input("Введите вашу догадку: ")
+                if guess == ''.join(answer):
+                    print("__________________________________________________________ \nПобеда \n__________________________________________________________")
+                    live = 8
+                    break
+                else:
+                    print('__________________________________________________________ \nGameOver \n__________________________________________________________')
+                    live = 8
+                    break
+            elif Game_sit == 'no':
+                guess = ''
+                while (len(guess) != 1):
+                    guess = input("Введите вашу догадку: ")
+                if guess in letter:
+                    print(f"Эта буква уже была.\n Вот списко уже использованных букв: {letter} \n__________________________________________________________")
+                    continue
+                else:
+                    letter.append(guess)
+
+                # цикл проверки буквы и вывод результата
+                for i in range (len(answer)):
+                    if guess in answer:
+                        if guess == answer[i]:
+                            answer_result = list(answer_result)
+                            answer_result[i*2] = guess
+                            answer_result = ''.join(answer_result)
+                            print(f"{answer_result} \n__________________________________________________________")
+                    else:
+                        print(HANGMANPICS[live])
+                        print(f"{answer_result} \n__________________________________________________________")
+                        live += 1
+                        break
+            
+            #Конец игры
+            if live == 7:
+                live += 1
+                print("GameOver \n__________________________________________________________")
+                
+        game_mode = input("Пограем ещё? \n")
+        if game_mode == 'no':
+            game_mode == False
+        else:
+            game_mode == True
+            Level = int(input("Введите сложность(длину слова) в игре: "))
+        main(Level)
+main(Level)
